@@ -1,0 +1,531 @@
+`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vedanth K — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#101413;
+    --paper:#ECE7DD;
+    --paper-soft: rgba(236,231,221,0.68);
+    --brass:#C9A15A;
+    --pewter:#3A403D;
+    --pewter-light:#565D59;
+    --teal:#4FA3A0;
+    --red:#D64545;
+    --hair: rgba(236,231,221,0.12);
+    --reveal: 18%;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink); color:var(--paper);
+    font-family:'Inter', sans-serif; -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{ background:var(--brass); color:var(--ink); }
+  a{ color:inherit; text-decoration:none; }
+  h1,h2,h3{ font-family:'Space Grotesk', sans-serif; letter-spacing:-0.01em; }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+
+  /* ---------- Top bar / aperture dial nav ---------- */
+  .topbar{
+    position:fixed; top:0; left:0; right:0; z-index:200;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:20px 5vw; background:linear-gradient(180deg, rgba(16,20,19,0.9), transparent);
+  }
+  .brand{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:1rem; display:flex; align-items:center; gap:10px;}
+  .brand .rec{ width:7px; height:7px; border-radius:50%; background:var(--red); animation:pulse 2.4s ease-in-out infinite;}
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:0.25;} }
+
+  .dial{ display:flex; align-items:center; gap:clamp(10px,2.4vw,26px); }
+  .dial .tick{
+    font-family:'JetBrains Mono',monospace; font-size:0.74rem; color:var(--pewter-light);
+    cursor:pointer; padding-bottom:4px; border-bottom:2px solid transparent; transition:all 0.25s ease;
+  }
+  .dial .tick:hover{ color:var(--paper); }
+  .dial .tick.active{ color:var(--brass); border-color:var(--brass); }
+
+  /* ---------- Hero / Iris ---------- */
+  .hero{
+    min-height:100svh; display:flex; align-items:center; justify-content:center; position:relative;
+    padding:120px 5vw 60px;
+  }
+  .iris-wrap{
+    position:relative; width:min(56vw, 560px); aspect-ratio:1/1; display:flex; align-items:center; justify-content:center;
+  }
+  .iris-svg{ position:absolute; inset:0; width:100%; height:100%; animation:idle-spin 200s linear infinite; }
+  @keyframes idle-spin{ from{ transform:rotate(0deg);} to{ transform:rotate(360deg);} }
+  .iris-reveal{
+    position:absolute; border-radius:50%; inset:0;
+    background:
+      radial-gradient(circle at 38% 32%, #E8C079 0%, #C9762F 32%, #6b3a1f 62%, #1a0f0a 100%);
+    clip-path: circle(var(--reveal) at 50% 50%);
+    transition: clip-path 0.05s linear;
+  }
+  .iris-reveal .grain{
+    position:absolute; inset:0; border-radius:50%; opacity:0.22; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .fstop-readout{
+    position:absolute; bottom:-52px; left:50%; transform:translateX(-50%);
+    font-family:'JetBrains Mono',monospace; font-size:0.82rem; color:var(--brass); letter-spacing:0.06em;
+    white-space:nowrap;
+  }
+
+  .hero-copy{
+    position:absolute; left:5vw; top:50%; transform:translateY(-50%); max-width:30ch; z-index:2;
+  }
+  .hero-copy .eyebrow{ font-family:'JetBrains Mono',monospace; font-size:0.76rem; color:var(--brass); letter-spacing:0.1em; margin-bottom:18px; }
+  .hero-copy h1{ font-size:clamp(2rem,4.6vw,3.6rem); line-height:1.04; font-weight:600; }
+  .hero-copy p{ margin-top:22px; color:var(--paper-soft); line-height:1.65; font-size:1.02rem; max-width:34ch; }
+  @media(max-width:900px){
+    .hero{ flex-direction:column; gap:40px; padding-top:140px; }
+    .hero-copy{ position:static; transform:none; max-width:none; text-align:center; }
+    .hero-copy p{ margin-left:auto; margin-right:auto; }
+    .iris-wrap{ width:min(70vw,420px); }
+  }
+
+  .scroll-hint{
+    position:absolute; bottom:30px; left:50%; transform:translateX(-50%);
+    font-family:'JetBrains Mono',monospace; font-size:0.68rem; color:var(--pewter-light);
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+  }
+  .scroll-hint .stem{ width:1px; height:26px; background:var(--pewter-light); position:relative; overflow:hidden; }
+  .scroll-hint .stem::after{ content:""; position:absolute; top:-100%; left:0; width:100%; height:100%; background:var(--brass); animation:drip 1.8s ease-in-out infinite; }
+  @keyframes drip{ 0%{top:-100%;} 60%{top:100%;} 100%{top:100%;} }
+
+  /* ---------- Section shell ---------- */
+  section{ position:relative; padding:150px 5vw 40px; max-width:1280px; margin:0 auto; }
+  .section-mark{ position:relative; margin-bottom:70px; }
+  .section-mark .watermark{
+    font-family:'JetBrains Mono',monospace; font-weight:600; font-size:clamp(4rem,11vw,9rem);
+    color:transparent; -webkit-text-stroke:1px var(--hair); line-height:1; user-select:none;
+    position:absolute; top:-1.1em; left:-0.02em; z-index:0; letter-spacing:-0.02em;
+  }
+  .section-mark .heading{ position:relative; z-index:1; padding-top:36px; }
+  .section-mark h2{ font-size:clamp(1.7rem,3.4vw,2.6rem); font-weight:600; }
+  .section-mark p{ margin-top:14px; max-width:56ch; color:var(--paper-soft); line-height:1.65; }
+  .mini-blade{ width:22px; height:22px; opacity:0.8; }
+
+  /* ---------- Photography ---------- */
+  .photo-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:3px; }
+  .pframe{ aspect-ratio:4/5; position:relative; overflow:hidden; cursor:pointer; }
+  .pframe .swatch{ position:absolute; inset:0; transition:transform 0.6s cubic-bezier(.16,1,.3,1); }
+  .pframe .swatch img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .pframe:hover .swatch{ transform:scale(1.05); }
+  .pframe .info{
+    position:absolute; inset:0; background:linear-gradient(transparent 45%, rgba(0,0,0,0.7));
+    display:flex; flex-direction:column; justify-content:flex-end; padding:14px;
+    opacity:0; transition:opacity 0.3s ease;
+  }
+  .pframe:hover .info{ opacity:1; }
+  .info .fnum{ font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--brass); }
+  .info .loc{ font-size:0.78rem; margin-top:4px; color:var(--paper); }
+  @media(max-width:760px){ .photo-grid{ grid-template-columns:repeat(2,1fr); } }
+
+  /* ---------- Videography ---------- */
+  .page-list{ display:flex; flex-direction:column; gap:2px; }
+  .page-card{
+    padding:28px 0; border-top:1px solid var(--hair);
+  }
+  .page-card:last-child{ border-bottom:1px solid var(--hair); }
+  .page-head{ display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+  .page-head a.handle{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:1.1rem; }
+  .page-head a.handle:hover{ color:var(--brass); }
+  .page-head .count{ font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--pewter-light); }
+  .reel-links{ display:flex; flex-wrap:wrap; gap:8px; }
+  .reel-links a{
+    font-family:'JetBrains Mono',monospace; font-size:0.72rem; color:var(--paper-soft);
+    border:1px solid var(--hair); border-radius:100px; padding:6px 13px; transition:all 0.2s ease;
+  }
+  .reel-links a:hover{ color:var(--ink); background:var(--brass); border-color:var(--brass); }
+  @media(max-width:600px){ .page-head{ flex-direction:column; align-items:flex-start; } }
+
+  /* ---------- Design ---------- */
+  .case{
+    display:grid; grid-template-columns:0.7fr 1.5fr auto; gap:32px; align-items:center;
+    padding:30px 0; border-top:1px solid var(--hair);
+  }
+  .case:last-child{ border-bottom:1px solid var(--hair); }
+  .case h3{ font-size:1.3rem; font-weight:600; }
+  .case .tag{ font-family:'JetBrains Mono',monospace; font-size:0.68rem; color:var(--pewter-light); text-transform:uppercase; letter-spacing:0.08em; display:block; margin-top:8px;}
+  .case p{ color:var(--paper-soft); line-height:1.65; font-size:0.95rem; }
+  .case .dof{
+    font-family:'JetBrains Mono',monospace; font-size:0.72rem; color:var(--brass); text-align:right; white-space:nowrap;
+  }
+  .status-pill{
+    display:inline-flex; align-items:center; gap:7px; font-family:'JetBrains Mono',monospace; font-size:0.68rem;
+    color:var(--brass); border:1px solid var(--brass); border-radius:100px; padding:5px 12px; letter-spacing:0.04em;
+  }
+  .status-pill .dot{ width:6px; height:6px; border-radius:50%; background:var(--brass); animation:pulse 2.2s ease-in-out infinite; }
+  @media(max-width:760px){ .case{ grid-template-columns:1fr; gap:10px; } .case .dof{ text-align:left; } }
+
+  .case-gallery{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:16px; }
+  .case-gallery img{ width:100%; border-radius:8px; display:block; object-fit:cover; aspect-ratio:4/3; }
+  .case-gallery a.src-link{ grid-column:1/-1; font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--brass); margin-top:2px; }
+  .case-gallery a.src-link:hover{ text-decoration:underline; }
+
+  /* ---------- Code ---------- */
+  .repo-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--hair); }
+  .repo{ background:var(--ink); padding:30px; display:flex; flex-direction:column; gap:12px; }
+  .repo .rname{ font-family:'JetBrains Mono',monospace; color:var(--teal); font-size:0.96rem; }
+  .repo .ryear{ font-family:'JetBrains Mono',monospace; color:var(--pewter-light); font-size:0.68rem; float:right; }
+  .repo p{ color:var(--paper-soft); font-size:0.9rem; line-height:1.6; }
+  .stack{ display:flex; gap:8px; flex-wrap:wrap; margin-top:auto; }
+  .stack span{ font-family:'JetBrains Mono',monospace; font-size:0.63rem; padding:4px 10px; border:1px solid var(--hair); border-radius:20px; color:var(--pewter-light);}
+  @media(max-width:700px){ .repo-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- In Focus / about ---------- */
+  .focus-grid{ display:grid; grid-template-columns:1fr 1fr; gap:60px; }
+  .focus-grid .lede{ font-size:clamp(1.3rem,2.4vw,1.8rem); font-weight:500; line-height:1.4; font-family:'Space Grotesk',sans-serif;}
+  .focus-grid .lede span{ color:var(--brass); }
+  .contact-list a{ display:flex; justify-content:space-between; padding:14px 0; border-bottom:1px solid var(--hair); font-size:0.95rem; }
+  .contact-list a span{ color:var(--pewter-light); font-family:'JetBrains Mono',monospace; font-size:0.82rem; }
+  .contact-list a:hover{ color:var(--brass); }
+  @media(max-width:760px){ .focus-grid{ grid-template-columns:1fr; } }
+
+  footer{
+    padding:36px 5vw; display:flex; justify-content:space-between; border-top:1px solid var(--hair);
+    font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--pewter-light); flex-wrap:wrap; gap:10px;
+  }
+
+  @media(prefers-reduced-motion:reduce){ *{ animation:none !important; transition:none !important; } }
+  :focus-visible{ outline:2px solid var(--brass); outline-offset:3px; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand"><span class="rec"></span>Vedanth K</div>
+  <nav class="dial" id="dial">
+    <div class="tick active mono" data-target="hero" data-fstop="F/1.4">Intro</div>
+    <div class="tick mono" data-target="photo" data-fstop="F/2.8">Photography</div>
+    <div class="tick mono" data-target="video" data-fstop="F/4">Videography</div>
+    <div class="tick mono" data-target="design" data-fstop="F/5.6">Design</div>
+    <div class="tick mono" data-target="art" data-fstop="F/8">Art</div>
+    <div class="tick mono" data-target="code" data-fstop="F/11">Code</div>
+    <div class="tick mono" data-target="focus" data-fstop="F/16">Contact</div>
+  </nav>
+</header>
+
+<section class="hero" id="hero">
+  <div class="hero-copy">
+    <div class="eyebrow mono">WIDE OPEN — F/1.4</div>
+    <h1>Everything starts<br>out of focus.</h1>
+    <p>Photographer, videographer, artist, product designer, and developer. Scroll to stop down — each section brings a different part of the work into focus.</p>
+  </div>
+  <div class="iris-wrap">
+    <svg class="iris-svg" id="irisSvg" viewBox="0 0 300 300"></svg>
+    <div class="iris-reveal" id="irisReveal"><div class="grain"></div></div>
+    <div class="fstop-readout mono" id="fstopReadout">f/1.4 · wide open</div>
+  </div>
+  <div class="scroll-hint"><div class="stem"></div>stop down</div>
+</section>
+
+<section id="photo">
+  <div class="section-mark">
+    <div class="watermark">2.8</div>
+    <div class="heading">
+      <h2>Photography <span class="mono" style="color:var(--brass); font-size:0.55em; font-weight:500;">f/2.8</span></h2>
+      <p>Shallow enough to isolate the subject. Street, portrait, and landscape frames from recent rolls, shot on both film and digital.</p>
+    </div>
+  </div>
+  <div class="photo-grid" id="photoGrid"></div>
+</section>
+
+<section id="video">
+  <div class="section-mark">
+    <div class="watermark">4</div>
+    <div class="heading">
+      <h2>Videography <span class="mono" style="color:var(--brass); font-size:0.55em; font-weight:500;">f/4</span></h2>
+      <p>Enough depth to keep the motion and the subject both readable. Short-form and reel work shot and edited for a number of Instagram pages.</p>
+    </div>
+  </div>
+  <div class="page-list" id="pageList"></div>
+</section>
+
+<section id="design">
+  <div class="section-mark">
+    <div class="watermark">5.6</div>
+    <div class="heading">
+      <h2>Design <span class="mono" style="color:var(--brass); font-size:0.55em; font-weight:500;">f/5.6</span></h2>
+      <p>Currently building — this section will grow as the work does. Right now, one project is in focus.</p>
+    </div>
+  </div>
+  <div class="cases">
+    <div class="case">
+      <div><span class="tag mono">PRODUCT · SYSTEM</span><div style="margin-top:12px;"><span class="status-pill"><span class="dot"></span>IN PROGRESS</span></div></div>
+      <div>
+        <h3>GoBite — Smart Campus Food Pre-Ordering</h3>
+        <p>An AI-powered pre-ordering and queue management system for college campuses — students order ahead, an AI model predicts kitchen load and queue times, and canteens serve without the crowd. Currently designing the ordering flow and the live-queue interface.</p>
+      </div>
+      <div class="dof">Building now<br>With a friend</div>
+    </div>
+    <div class="case">
+      <div><span class="tag mono">ARCHITECTURE · 3D</span></div>
+      <div>
+        <h3>Home — Exterior Design & 3D Visualization</h3>
+        <p>Designed the exterior of my own house and built out a full 3D visualization of it, working with AI tools throughout the process — from massing and facade options to the final render.</p>
+        <div class="case-gallery">
+          <img src="images/home1.jpg" alt="House 3D exterior render" />
+          <img src="images/home2.jpg" alt="House exterior renders and floor plan" />
+          <a class="src-link" href="https://www.meshy.ai/s/D8e7Cv" target="_blank" rel="noopener">View 3D model on Meshy →</a>
+        </div>
+      </div>
+      <div class="dof">Completed<br>Personal project</div>
+    </div>
+  </div>
+</section>
+
+<section id="art">
+  <div class="section-mark">
+    <div class="watermark">8</div>
+    <div class="heading">
+      <h2>Art <span class="mono" style="color:var(--brass); font-size:0.55em; font-weight:500;">f/8</span></h2>
+      <p>Balanced depth — hand work, mostly pencil. Character studies and portraits alongside everything shot and built above.</p>
+    </div>
+  </div>
+  <div class="photo-grid" id="artGrid"></div>
+</section>
+
+<div style="background:#0B0E0D;">
+  <section id="code">
+    <div class="section-mark">
+      <div class="watermark">11</div>
+      <div class="heading">
+        <h2>Code <span class="mono" style="color:var(--brass); font-size:0.55em; font-weight:500;">f/11</span></h2>
+        <p>Currently building — this section will grow as the work does. Right now, one project is in focus.</p>
+      </div>
+    </div>
+    <div class="repo-grid">
+      <div class="repo">
+        <div><span class="status-pill" style="float:right;"><span class="dot"></span>IN PROGRESS</span><span class="rname">gobite-app</span></div>
+        <p>The student-facing ordering app — browse canteen menus, place a pre-order, and track your place in the queue in real time.</p>
+        <div class="stack"><span>React Native</span><span>Node.js</span><span>Firebase</span></div>
+      </div>
+      <div class="repo">
+        <div><span class="status-pill" style="float:right;"><span class="dot"></span>IN PROGRESS</span><span class="rname">gobite-queue-engine</span></div>
+        <p>The prediction service behind it — models kitchen load and expected wait time from live order volume, so the app can queue orders intelligently.</p>
+        <div class="stack"><span>Python</span><span>FastAPI</span><span>ML model</span></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<section id="focus">
+  <div class="section-mark">
+    <div class="watermark">16</div>
+    <div class="heading">
+      <h2>Contact <span class="mono" style="color:var(--brass); font-size:0.55em; font-weight:500;">f/16</span></h2>
+      <p>The sharpest section. No blur, no ambiguity — just how to reach me.</p>
+    </div>
+  </div>
+  <div class="focus-grid">
+    <div class="lede">I split my time between <span>light</span>, <span>motion</span>, <span>the hand</span>, <span>interface</span>, and <span>code</span> — practices that keep sharpening each other. Based in Bengaluru, working with people everywhere.</div>
+    <div class="contact-list">
+      <a href="mailto:work.vedanthk@gmail.com">Email <span>work.vedanthk@gmail.com</span></a>
+      <a href="https://www.instagram.com/_vedanth_k_?igsh=MTJjM3JydW55dDdlbw%3D%3D&utm_source=qr">Instagram <span>@_vedanth_k_</span></a>
+      <a href="https://github.com/Vedanth-718">GitHub <span>/Vedanth-718</span></a>
+      <a href="https://www.linkedin.com/in/vedanth-k-a92057331">LinkedIn <span>/in/vedanth-k</span></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Vedanth K</span>
+  <span>f/1.4 → f/4 → f/16, one stop at a time</span>
+</footer>
+
+<script>
+  // Build the iris blade pinwheel as SVG paths
+  const NS = "http://www.w3.org/2000/svg";
+  const svg = document.getElementById('irisSvg');
+  const bladeCount = 10;
+  const cx = 150, cy = 150, rOuter = 148, rInner = 46;
+  for(let i=0;i<bladeCount;i++){
+    const angle = (i * 360/bladeCount) * Math.PI/180;
+    const w = (Math.PI*2/bladeCount) * 0.62;
+    const ax = cx + rInner*Math.cos(angle - w), ay = cy + rInner*Math.sin(angle - w);
+    const bx = cx + rOuter*Math.cos(angle), by = cy + rOuter*Math.sin(angle);
+    const cx2 = cx + rInner*Math.cos(angle + w), cy2 = cy + rInner*Math.sin(angle + w);
+    const path = document.createElementNS(NS, "path");
+    path.setAttribute("d", `M ${ax} ${ay} L ${bx} ${by} L ${cx2} ${cy2} Q ${cx} ${cy} ${ax} ${ay} Z`);
+    path.setAttribute("fill", i % 2 === 0 ? "#2B302E" : "#3A403D");
+    path.setAttribute("stroke", "#C9A15A");
+    path.setAttribute("stroke-width", "0.5");
+    path.setAttribute("stroke-opacity", "0.35");
+    svg.appendChild(path);
+  }
+  // outer barrel ring
+  const ring = document.createElementNS(NS,"circle");
+  ring.setAttribute("cx",cx); ring.setAttribute("cy",cy); ring.setAttribute("r", rOuter-2);
+  ring.setAttribute("fill","none"); ring.setAttribute("stroke","#C9A15A");
+  ring.setAttribute("stroke-width","1.5"); ring.setAttribute("stroke-opacity","0.55");
+  svg.appendChild(ring);
+
+  // Scroll-driven reveal + f-stop readout, scoped to hero
+  const hero = document.getElementById('hero');
+  const reveal = document.getElementById('irisReveal');
+  const readout = document.getElementById('fstopReadout');
+  const stops = [
+    {max:0.18, label:'f/1.4 · wide open', pct:14},
+    {max:0.4,  label:'f/2 · opening up',  pct:24},
+    {max:0.62, label:'f/2.8 · settling',  pct:32},
+    {max:0.85, label:'f/4 · gathering focus', pct:40},
+    {max:1.01, label:'f/5.6 · in focus', pct:48},
+  ];
+  function onScroll(){
+    const rect = hero.getBoundingClientRect();
+    const total = rect.height;
+    const progress = Math.min(1, Math.max(0, (0 - rect.top) / (total*0.85)));
+    const stop = stops.find(s => progress <= s.max) || stops[stops.length-1];
+    document.documentElement.style.setProperty('--reveal', stop.pct + '%');
+    readout.textContent = stop.label;
+  }
+  window.addEventListener('scroll', onScroll, { passive:true });
+  onScroll();
+
+  // Aperture dial nav — active state + smooth scroll
+  const ticks = document.querySelectorAll('.dial .tick');
+  const targets = ['hero','photo','video','design','art','code','focus'].map(id => document.getElementById(id));
+  ticks.forEach(t => t.addEventListener('click', () => {
+    document.getElementById(t.dataset.target).scrollIntoView({behavior:'smooth'});
+  }));
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        ticks.forEach(t=>t.classList.remove('active'));
+        const match = document.querySelector(`.tick[data-target="${e.target.id}"]`);
+        if(match) match.classList.add('active');
+      }
+    });
+  }, { rootMargin:'-45% 0px -50% 0px' });
+  targets.forEach(t => t && io.observe(t));
+
+  // Photography contact grid — real captured photos
+  const photos = [
+    { src:'images/photo1.jpg',  caption:'Night · Streetlight' },
+    { src:'images/photo2.jpg',  caption:'Night · City skyline' },
+    { src:'images/photo3.jpg',  caption:'Interior · Mall atrium' },
+    { src:'images/photo4.jpg',  caption:'Interior · Light installation' },
+    { src:'images/photo5.jpg',  caption:'Golden hour · Railway platform' },
+    { src:'images/photo6.jpg',  caption:'Landscape · River bend' },
+    { src:'images/photo7.jpg',  caption:'Interior · Atrium dome' },
+    { src:'images/photo8.jpg',  caption:'Close-up · Bougainvillea' },
+    { src:'images/photo9.jpg',  caption:'Close-up · Backlit palm' },
+    { src:'images/photo10.jpg', caption:'Macro · Wildflower field' },
+    { src:'images/photo11.jpg', caption:'Close-up · Water lilies' },
+    { src:'images/photo12.jpg', caption:'Landscape · Campus pathway' },
+    { src:'images/photo13.jpg', caption:'Architecture · Courtyard' },
+    { src:'images/photo14.jpg', caption:'Architecture · Stairwell' },
+    { src:'images/photo15.jpg', caption:'Landscape · Park lawn' },
+  ];
+  const grid = document.getElementById('photoGrid');
+  photos.forEach((p)=>{
+    const el = document.createElement('div');
+    el.className = 'pframe';
+    el.innerHTML = `
+      <div class="swatch"><img src="${p.src}" alt="${p.caption}" loading="lazy" /></div>
+      <div class="info"><span class="loc">${p.caption}</span></div>
+    `;
+    grid.appendChild(el);
+  });
+
+  // Videography — Instagram pages worked with, and reels shot/edited for each
+  const pages = [
+    {
+      handle: '@acharyakannadavedike',
+      account: 'https://www.instagram.com/acharyakannadavedike',
+      reels: [
+        'https://www.instagram.com/reel/DRYpZLBiBKH/','https://www.instagram.com/reel/DQo8w5AD6-7/',
+        'https://www.instagram.com/reel/DQk8U_BDy-o/','https://www.instagram.com/reel/DQilN9bD6eU/',
+        'https://www.instagram.com/reel/DQa8r07j-Y6/','https://www.instagram.com/reel/DQWnMnMD1rt/',
+        'https://www.instagram.com/reel/DQGpbzIAV-T/','https://www.instagram.com/reel/DP75mBsDwMG/',
+        'https://www.instagram.com/reel/DP5xjJJgLCn/','https://www.instagram.com/reel/DP3SZ3EjzXz/',
+        'https://www.instagram.com/reel/DPiyVK-D6r-/','https://www.instagram.com/reel/DPBQAXSD-YI/'
+      ]
+    },
+    {
+      handle: '@utkarsh_rhythmanya',
+      account: 'https://www.instagram.com/utkarsh_rhythmanya',
+      reels: [
+        'https://www.instagram.com/reel/DRtibZekXzQ/','https://www.instagram.com/reel/DRMWeEgkTuq/',
+        'https://www.instagram.com/reel/DQZdqMkD_UZ/','https://www.instagram.com/reel/DQRgXbajyu_/'
+      ]
+    },
+    {
+      handle: '@acharya_homies',
+      account: 'https://www.instagram.com/acharya_homies',
+      reels: [
+        'https://www.instagram.com/reel/Dbai7ROBiRk/','https://www.instagram.com/reel/DbX9LV0uDVi/',
+        'https://www.instagram.com/reel/DcEA2MmPPQe/','https://www.instagram.com/reel/Db-oJGJvKQL/',
+        'https://www.instagram.com/reel/DbqQpfkPE7o/','https://www.instagram.com/reel/DbnvyyfPzcd/',
+        'https://www.instagram.com/reel/Dbfx8J-hwYS/','https://www.instagram.com/reel/DWNl9u5Doo6/'
+      ]
+    },
+    {
+      handle: '@_vedanth_k_ (personal)',
+      account: 'https://www.instagram.com/_vedanth_k_',
+      reels: [
+        'https://www.instagram.com/reel/DJDy8dHz5QK/','https://www.instagram.com/reel/DVP_5dhCDWH/',
+        'https://www.instagram.com/reel/DEU_HWEy8XO/','https://www.instagram.com/reel/DEQ-l_9Sv1z/',
+        'https://www.instagram.com/reel/DCuINf1S0iH/','https://www.instagram.com/reel/C3IMHAELbfw/',
+        'https://www.instagram.com/reel/CxdH5k5rsdy/','https://www.instagram.com/reel/CsVeaZMsmgE/',
+        'https://www.instagram.com/reel/DW9x-Mck2oC/'
+      ]
+    }
+  ];
+  const pageList = document.getElementById('pageList');
+  pages.forEach(p => {
+    const el = document.createElement('div');
+    el.className = 'page-card';
+    el.innerHTML = `
+      <div class="page-head">
+        <a class="handle" href="${p.account}" target="_blank" rel="noopener">${p.handle}</a>
+        <span class="count mono">${p.reels.length} reel${p.reels.length > 1 ? 's' : ''}</span>
+      </div>
+      <div class="reel-links">
+        ${p.reels.map((r,i) => `<a href="${r}" target="_blank" rel="noopener">Reel ${i+1}</a>`).join('')}
+      </div>
+    `;
+    pageList.appendChild(el);
+  });
+
+  // Art — traditional pencil/ink/paint work
+  const art = [
+    { src:'images/art1.jpg',  title:'Village Study', medium:'Pencil' },
+    { src:'images/art2.jpg',  title:'House Study', medium:'Pencil' },
+    { src:'images/art3.jpg',  title:'Deadpool', medium:'Pencil' },
+    { src:'images/art4.jpg',  title:'Wolverine', medium:'Pencil' },
+    { src:'images/art5.jpg',  title:'Wednesday Addams', medium:'Pencil' },
+    { src:'images/art6.jpg',  title:'Cristiano Ronaldo', medium:'Pencil' },
+    { src:'images/art7.jpg',  title:'Squid Game Salesman', medium:'Pencil' },
+    { src:'images/art8.jpg',  title:'Thomas Shelby', medium:'Pencil' },
+    { src:'images/art9.jpg',  title:'Miles Morales', medium:'Pencil' },
+    { src:'images/art10.jpg', title:'Iron Man', medium:'Pencil' },
+    { src:'images/art11.jpg', title:'Pennywise', medium:'Pencil' },
+    { src:'images/art12.jpg', title:'Venom', medium:'Pencil' },
+    { src:'images/art13.jpg', title:'Sonic', medium:'Pencil' },
+    { src:'images/art14.jpg', title:'Hiccup', medium:'Pencil' },
+    { src:'images/art15.jpg', title:'Chill Guy', medium:'Pencil' },
+    { src:'images/art16.jpg', title:'Nick Wilde', medium:'Pencil' },
+    { src:'images/art17.jpg', title:'Zentangle Art', medium:'Ink' },
+  ];
+  const artGrid = document.getElementById('artGrid');
+  art.forEach((a)=>{
+    const el = document.createElement('div');
+    el.className = 'pframe';
+    el.innerHTML = `
+      <div class="swatch"><img src="${a.src}" alt="${a.title}" loading="lazy" /></div>
+      <div class="info"><span class="fnum mono">${a.medium}</span><span class="loc">${a.title}</span></div>
+    `;
+    artGrid.appendChild(el);
+  });
+</script>
+
+</body>
+</html>
